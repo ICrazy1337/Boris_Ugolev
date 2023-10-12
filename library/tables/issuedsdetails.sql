@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS dictionary.issuedsdetails
+CREATE TABLE IF NOT EXISTS library.issuedsdetails
 (
     issued_id INT NOT NULL,
     book_id INT NOT NULL,
