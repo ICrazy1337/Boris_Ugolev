@@ -5,3 +5,9 @@ CREATE TABLE IF NOT EXISTS dictionary.posts
     name VARCHAR(128) NOT NULL,
     salary NUMERIC(15,2) NOT NULL
 );
+
+INSERT INTO dictionary.posts (name, salary)
+VALUES
+    ('Администратор', 70000.00),
+    ('Менеджер', 55000.00),
+    ('Бухгалтер', 55000.00);
