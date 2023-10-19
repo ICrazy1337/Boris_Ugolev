@@ -9,6 +9,10 @@ SELECT dictionary.posts_upd('{
   "salary": 50000
 }')
 ```
+##### Пример правильного выполнения
+```json
+{"data": NULL}
+```
 ### Жанры
 ```sql
 INSERT INTO dictionary.genres (name)
@@ -42,11 +46,19 @@ SELECT dictionary.subscriptionstypes_upd('{
   "price": 50000
 }')
 ```
+##### Пример правильного выполнения
+```json
+{"data": NULL}
+```
 ### Работа с депозитами
 ```sql
 select dictionary.deposits_upd('{
   "book_id": 1,
   "deposit": 299.00}', 2542);
+```
+##### Пример правильного выполнения
+```json
+{"data": NULL}
 ```
 ### Работа с типами штрафов
 ```sql
@@ -55,4 +67,8 @@ SELECT dictionary.penaltiestypes_upd('{
   "name": "Месячная",
   "amount": 500
 }')
+```
+##### Пример правильного выполнения
+```json
+{"data": NULL}
 ```

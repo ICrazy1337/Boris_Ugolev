@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION humanresource.usersupd(_src JSONB, _staff_id INT) RETURNS JSONB
+CREATE OR REPLACE FUNCTION humanresource.users_upd(_src JSONB, _staff_id INT) RETURNS JSONB
     SECURITY DEFINER
     LANGUAGE plpgsql
 AS
@@ -11,7 +11,7 @@ DECLARE
     _birth_day    DATE;
     _dt           TIMESTAMPTZ := now() AT TIME ZONE 'Europe/Moscow';
 BEGIN
-    SELECT COALESCE(ur.user_id, nextval('humanresource.user_sq')) AS user_id,
+    SELECT COALESCE(ur.user_id, nextval('humanresource.users_sq')) AS user_id,
            s.name,
            s.surname,
            s.phone_number,

@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS humanresource.staff
     phone_number VARCHAR(11) NOT NULL
         CONSTRAINT uq_staff UNIQUE,
     post_id      INT         NOT NULL,
-    is_deleted   BOOLEAN     NOT NULL,
     ch_staff_id  INT         NOT NULL,
     ch_dt        TIMESTAMPTZ NOT NULL
 );

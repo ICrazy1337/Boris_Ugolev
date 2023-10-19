@@ -1,0 +1,1 @@
+CREATE SEQUENCE IF NOT EXISTS humanresource.staff_sq AS BIGINT START WITH 1;

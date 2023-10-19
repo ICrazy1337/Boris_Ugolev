@@ -8,7 +8,7 @@ DECLARE
     _name VARCHAR(128);
     _salary NUMERIC(15,2);
 BEGIN
-    SELECT post_id, name, salary
+    SELECT coalesce(post_id, nextval('dictionary.posts_post_id_seq')) as post_id, name, salary
     INTO _post_id, _name, _salary
     FROM jsonb_to_record(_src) AS s (post_id SMALLINT,
                                      name VARCHAR(128),
