@@ -6,6 +6,7 @@ $$
 DECLARE
     _user_id INT;
     _type_id INT;
+    _months INTERVAL;
     _end_dt TIMESTAMPTZ;
 BEGIN
     SELECT user_id, type_id
@@ -24,7 +25,9 @@ BEGIN
                                  _detail := concat('type_id = ', _type_id));
     END IF;
 
-    _end_dt := (clock_timestamp() AT TIME ZONE 'Europe/Moscow' + (SELECT months FROM dictionary.subscribestypes WHERE type_id = _type_id))::timestamptz;
+    SELECT months INTO _months FROM dictionary.subscribestypes WHERE type_id = _type_id;
+
+    SELECT now() + _months INTO _end_dt;
 
     WITH ins_cte AS (
         INSERT INTO humanresource.subscribers AS ec (user_id, type_id, staff_id, end_dt)
