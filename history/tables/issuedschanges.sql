@@ -1,7 +1,7 @@
-CREATE TABLE IF NOT EXISTS library.issueds
+CREATE TABLE IF NOT EXISTS history.issuedschanges
 (
-    issued_id   BIGINT         NOT NULL
-        CONSTRAINT pk_issued PRIMARY KEY,
+    log_id      BIGSERIAL      NOT NULL,
+    issued_id   BIGINT         NOT NULL,
     user_id     INT            NOT NULL,
     return_date DATE           NOT NULL,
     is_returned BOOLEAN        NOT NULL,

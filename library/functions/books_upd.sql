@@ -11,6 +11,7 @@ DECLARE
     _description VARCHAR(320);
     _cell_id INT;
     _is_available BOOLEAN;
+    _deposit NUMERIC(15,2);
 BEGIN
     SELECT coalesce(book_id, nextval('library.books_sq')) AS book_id,
            name,
@@ -18,15 +19,17 @@ BEGIN
            genre_id,
            description,
            cell_id,
-           is_available
-    INTO _book_id, _name, _author, _genre_id,  _description, _cell_id, _is_available
+           is_available,
+           deposit
+    INTO _book_id, _name, _author, _genre_id, _description, _cell_id, _is_available, _deposit
     FROM jsonb_to_record(_src) AS s (book_id INT,
                                      name VARCHAR(128),
                                      author VARCHAR(128),
                                      genre_id INT,
                                      description VARCHAR(320),
                                      cell_id INT,
-                                     is_available BOOLEAN);
+                                     is_available BOOLEAN,
+                                     deposit NUMERIC(15, 2));
 
     IF NOT EXISTS (SELECT 1 FROM dictionary.genres p WHERE p.genre_id = _genre_id) THEN
         RETURN public.errmessage(_errcode := 'library.books_upd.genre_id',
@@ -48,19 +51,20 @@ BEGIN
     UPDATE library.cells SET is_avaliable = FALSE WHERE cell_id = _cell_id;
 
     WITH ins_cte AS (
-        INSERT INTO library.books AS ec (book_id, cell_id, genre_id, name, author, description, is_available)
-            VALUES (_book_id, _cell_id, _genre_id, _name, _author, _description, _is_available)
+        INSERT INTO library.books AS ec (book_id, cell_id, genre_id, name, author, description, is_available, deposit)
+            VALUES (_book_id, _cell_id, _genre_id, _name, _author, _description, _is_available, _deposit)
             ON CONFLICT (book_id) DO UPDATE
                 SET cell_id = excluded.cell_id,
                     genre_id = excluded.genre_id,
                     name = excluded.name,
                     author = excluded.author,
                     description = excluded.description,
-                    is_available = excluded.is_available
+                    is_available = excluded.is_available,
+                    deposit = excluded.deposit
             RETURNING ec.*
     )
-    INSERT INTO history.bookschanges (book_id, cell_id, genre_id, name, author, description, is_available)
-    SELECT book_id, cell_id, genre_id, name, author, description, is_available
+    INSERT INTO history.bookschanges (book_id, cell_id, genre_id, name, author, description, is_available, deposit)
+    SELECT book_id, cell_id, genre_id, name, author, description, is_available, deposit
     FROM ins_cte ic;
 
     RETURN JSONB_BUILD_OBJECT('data', NULL);

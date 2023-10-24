@@ -1,7 +1,6 @@
 CREATE TABLE IF NOT EXISTS history.userschanges
 (
-    log_id       BIGSERIAL   NOT NULL
-        CONSTRAINT pk_userschanges PRIMARY KEY,
+    log_id       BIGSERIAL   NOT NULL,
     user_id      INT         NOT NULL,
     name         VARCHAR(64) NOT NULL,
     surname      VARCHAR(64) NOT NULL,

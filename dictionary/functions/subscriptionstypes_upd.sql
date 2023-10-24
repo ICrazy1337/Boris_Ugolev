@@ -6,15 +6,19 @@ $$
 DECLARE
     _type_id SMALLINT;
     _name    VARCHAR(64);
-    _months  INTERVAL;
+    _months  INT;
     _price   NUMERIC(15, 2);
 BEGIN
-    SELECT coalesce(type_id, nextval('dictionary.subscribestypes')) as type_id, name, months, price
+    SELECT coalesce(s.type_id, nextval('dictionary.subscribestypes_type_id_seq')) as type_id,
+           s.name,
+           s.months,
+           s.price
     INTO _type_id, _name, _months, _price
     FROM jsonb_to_record(_src) AS s (type_id SMALLINT,
                                      name VARCHAR(64),
-                                     months INTERVAL,
-                                     price NUMERIC(15, 2));
+                                     months INT,
+                                     price NUMERIC(15, 2))
+             LEFT JOIN dictionary.subscribestypes s1 ON s1.type_id = s.type_id;
 
     INSERT INTO dictionary.subscribestypes AS ec (type_id, name, months, price)
     SELECT _type_id, _name, _months, _price

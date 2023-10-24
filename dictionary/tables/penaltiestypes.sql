@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS dictionary.penaltiestypes
         CONSTRAINT pk_pentype PRIMARY KEY,
     name    VARCHAR(64) NOT NULL,
     amount  NUMERIC(15, 2)
-        CONSTRAINT ck_amount CHECK ( amount > 0 )
+        CONSTRAINT ck_amount CHECK ( amount >= 0 )
 );

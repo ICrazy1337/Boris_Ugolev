@@ -48,13 +48,14 @@ BEGIN
                     ch_dt = excluded.ch_dt
             RETURNING ec.*)
 
-    INSERT INTO history.userschanges   (user_id,
-                                        name,
-                                        surname,
-                                        phone_number,
-                                        birth_day,
-                                        ch_staff_id,
-                                        ch_dt)
+    INSERT
+    INTO history.userschanges (user_id,
+                               name,
+                               surname,
+                               phone_number,
+                               birth_day,
+                               ch_staff_id,
+                               ch_dt)
     SELECT ic.user_id,
            ic.name,
            ic.surname,

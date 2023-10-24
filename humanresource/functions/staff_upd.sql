@@ -11,7 +11,7 @@ DECLARE
     _post_id      INT;
     _ch_dt       TIMESTAMPTZ := now() AT TIME ZONE 'Europe/Moscow';
 BEGIN
-    SELECT COALESCE(st.staff_id, nextval('humanresource.staff_sq')) AS staff_id,
+    SELECT COALESCE(staff_id, nextval('humanresource.staff_sq')) AS staff_id,
            name,
            surname,
            phone_number,
@@ -21,9 +21,7 @@ BEGIN
                                      name VARCHAR(64),
                                      surname VARCHAR(64),
                                      phone_number VARCHAR(11),
-                                     post_id INT)
-             LEFT JOIN humanresource.staff st
-                       ON st.staff_id = s.staff_id;
+                                     post_id INT);
 
     IF NOT EXISTS (SELECT 1 FROM dictionary.posts p where p.post_id = _post_id) THEN
         RETURN public.errmessage(_errcode := 'humanresource.staff_upd.post_id',
