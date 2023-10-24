@@ -21,5 +21,3 @@ BEGIN
         END LOOP;
 END;
 $$;
-
-call history.create_partitions('subscriberschanges')

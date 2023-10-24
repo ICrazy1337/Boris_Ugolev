@@ -39,13 +39,3 @@ BEGIN
     RETURN JSONB_BUILD_OBJECT('data', NULL);
 END
 $$;
-
-select sync.users_import('{
-  "user_id": 1,
-  "name": "Boris",
-  "surname": "Ugolev",
-  "phone_number": "+7999999999",
-  "birth_day": "25-01-2004",
-  "ch_staff_id": 2542,
-  "ch_dt": "24-10-2023"
-}')
