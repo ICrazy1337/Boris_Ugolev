@@ -12,7 +12,7 @@ BEGIN
            _ch_staff_id,
            _ch_dt
     FROM library.issueds i
-    WHERE i.return_date < _ch_dt AND i.issued_id NOT IN (SELECT issued_id FROM library.penalties);
-
+    WHERE i.return_date < _ch_dt
+      AND NOT EXISTS (SELECT * FROM library.penalties);
 END
 $$;

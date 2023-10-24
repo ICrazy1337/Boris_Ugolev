@@ -8,7 +8,7 @@ DECLARE
     _name    VARCHAR(64);
     _amount  NUMERIC(15, 2);
 BEGIN
-    SELECT coalesce(s.type_id, nextval('dictionary.penaltiestypes_type_id_seq')) as type_id, s.name, s.amount
+    SELECT coalesce(p.type_id, nextval('dictionary.penaltiestypes_type_id_seq')) as type_id, p.name, p.amount
     INTO _type_id, _name, _amount
     FROM jsonb_to_record(_src) AS s (type_id SMALLINT,
                                      name VARCHAR(64),

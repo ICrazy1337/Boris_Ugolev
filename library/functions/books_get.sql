@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION library.books_get(_name VARCHAR(128)) RETURNS jsonb
-SECURITY DEFINER
-LANGUAGE plpgsql
+    SECURITY DEFINER
+    LANGUAGE plpgsql
 AS
 $$
 BEGIN
@@ -12,6 +12,7 @@ BEGIN
                      description,
                      cell_id,
                      is_available
-              FROM library.books b WHERE b.name = coalesce(_name, b.name)) res;
+              FROM library.books b
+              WHERE b.name = coalesce(_name, b.name)) res;
 END
 $$;

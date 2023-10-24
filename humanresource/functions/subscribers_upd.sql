@@ -4,8 +4,8 @@ CREATE OR REPLACE FUNCTION humanresource.subscribers_upd(_src JSONB, _staff_id I
 AS
 $$
 DECLARE
-    _user_id INT;
-    _type_id INT;
+    _user_id     INT;
+    _type_id     INT;
     _interval_dt INTERVAL;
 BEGIN
     SELECT user_id, type_id
@@ -33,10 +33,12 @@ BEGIN
             ON CONFLICT (user_id) DO UPDATE
                 SET type_id = excluded.type_id,
                     staff_id = excluded.staff_id,
-                    end_dt = (SELECT s.end_dt FROM humanresource.subscribers s WHERE s.user_id = _user_id) + _interval_dt
+                    end_dt = (SELECT s.end_dt FROM humanresource.subscribers s WHERE s.user_id = _user_id) +
+                             _interval_dt
             RETURNING ec.*)
 
-    INSERT INTO history.subscriberschanges (user_id, type_id, staff_id, ch_dt)
+    INSERT
+    INTO history.subscriberschanges (user_id, type_id, staff_id, ch_dt)
     SELECT ic.user_id, ic.type_id, ic.staff_id, now() AT TIME ZONE 'Europe/Moscow'
     FROM ins_cte ic;
 

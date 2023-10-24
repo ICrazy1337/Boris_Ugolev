@@ -9,10 +9,10 @@ DECLARE
     _months  INT;
     _price   NUMERIC(15, 2);
 BEGIN
-    SELECT coalesce(s.type_id, nextval('dictionary.subscribestypes_type_id_seq')) as type_id,
-           s.name,
-           s.months,
-           s.price
+    SELECT coalesce(s1.type_id, nextval('dictionary.subscribestypes_type_id_seq')) as type_id,
+           s1.name,
+           s1.months,
+           s1.price
     INTO _type_id, _name, _months, _price
     FROM jsonb_to_record(_src) AS s (type_id SMALLINT,
                                      name VARCHAR(64),

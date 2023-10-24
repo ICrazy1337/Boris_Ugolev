@@ -14,7 +14,7 @@ BEGIN
             _table := 'history.' || _table_name || TO_CHAR(_start_date, '_YYYY_MM');
             IF (TO_REGCLASS(_table::TEXT) ISNULL) THEN
                 EXECUTE FORMAT('CREATE TABLE ' || _table ||
-                               ' PARTITION OF history.'|| _table_name ||' FOR VALUES FROM (''' || _start_date ||
+                               ' PARTITION OF history.' || _table_name || ' FOR VALUES FROM (''' || _start_date ||
                                ''') TO (''' || _end_date || ''')');
             END IF;
             _start_date := _end_date;

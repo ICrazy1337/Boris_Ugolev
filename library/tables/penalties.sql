@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS library.penalties
 (
-    penalty_id  BIGSERIAL         NOT NULL
+    penalty_id  BIGSERIAL   NOT NULL
         CONSTRAINT pk_penalty PRIMARY KEY,
     type_id     INT         NOT NULL,
     issued_id   INT         NOT NULL,
