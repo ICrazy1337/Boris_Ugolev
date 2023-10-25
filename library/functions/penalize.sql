@@ -12,6 +12,7 @@ BEGIN
            _ch_staff_id,
            _ch_dt
     FROM library.issueds i
-    WHERE i.return_date < _ch_dt::DATE;
+    WHERE i.return_date < _ch_dt::DATE
+      AND NOT EXISTS(SELECT penalty_id FROM library.penalties);
 END
 $$;

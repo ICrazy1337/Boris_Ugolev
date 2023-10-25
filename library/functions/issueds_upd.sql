@@ -70,7 +70,7 @@ BEGIN
     INSERT INTO library.issuedsbooks (issued_id, book_id, dt)
     SELECT _issued_id, (elem ->> 'book_id')::INT, _ch_dt
     FROM jsonb_array_elements(_books) AS elem
-    ON CONFLICT (issued_id,book_id) DO UPDATE
+    ON CONFLICT (issued_id, book_id) DO UPDATE
         SET book_id = excluded.book_id,
             dt      = excluded.dt;
 
