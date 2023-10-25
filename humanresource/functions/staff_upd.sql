@@ -12,10 +12,10 @@ DECLARE
     _ch_dt        TIMESTAMPTZ := now() AT TIME ZONE 'Europe/Moscow';
 BEGIN
     SELECT COALESCE(s1.staff_id, nextval('humanresource.staff_sq')) AS staff_id,
-           s1.name,
-           s1.surname,
-           s1.phone_number,
-           s1.post_id
+           s.name,
+           s.surname,
+           s.phone_number,
+           s.post_id
     INTO _staff_id, _name, _surname, _phone_number, _post_id
     FROM jsonb_to_record(_src) AS s (staff_id INT,
                                      name VARCHAR(64),
@@ -23,12 +23,6 @@ BEGIN
                                      phone_number VARCHAR(11),
                                      post_id INT)
              LEFT JOIN humanresource.staff s1 ON s1.staff_id = s.staff_id;
-
-    IF NOT EXISTS (SELECT 1 FROM dictionary.posts p where p.post_id = _post_id) THEN
-        RETURN public.errmessage(_errcode := 'humanresource.staff_upd.post_id',
-                                 _msg := 'Нет такой должности!',
-                                 _detail := concat('post_id = ', _post_id));
-    END IF;
 
     INSERT INTO humanresource.staff AS ec (staff_id,
                                            name,

@@ -27,29 +27,29 @@ BEGIN
                                      deposit NUMERIC(15, 2))
              LEFT JOIN library.issueds i ON i.issued_id = s.issued_id;
 
-    CREATE TEMP TABLE tmp ON COMMIT DROP AS
-    SELECT book_id FROM jsonb_to_recordset(_books) AS data (book_id INT);
-
     IF EXISTS (SELECT 1
-               FROM tmp
-                        LEFT JOIN library.books b ON tmp.book_id = b.book_id
+               FROM jsonb_to_recordset(_books) AS data (book_id INT)
+                        LEFT JOIN library.books b ON data.book_id = b.book_id
                WHERE b.book_id IS NULL) THEN
         RETURN public.errmessage(_errcode := 'library.issueds_upd.not_possible',
                                  _msg := 'Выдача данных книг невозможна',
-                                 _detail := concat('book_id = ', (SELECT array_agg(tmp.book_id)
-                                                                  FROM tmp
-                                                                           LEFT JOIN library.books b ON tmp.book_id = b.book_id
+                                 _detail := concat('book_id = ', (SELECT array_agg(data.book_id)
+                                                                  FROM jsonb_to_recordset(_books) AS data (book_id INT)
+                                                                           LEFT JOIN library.books b ON data.book_id = b.book_id
                                                                   WHERE b.book_id IS NULL)));
     END IF;
 
-    SELECT COALESCE(SUM(b.deposit), 0)
-    FROM tmp
-             JOIN library.books b ON tmp.book_id = b.book_id
-    INTO _deposit;
+    WITH cte AS
+             (SELECT b.book_id, b.deposit
+              FROM jsonb_to_recordset(_books) AS data (book_id INT)
+                       JOIN library.books b ON data.book_id = b.book_id),
+         up_cte AS (UPDATE library.books
+             SET is_available = FALSE
+             WHERE book_id IN (SELECT book_id FROM cte) returning deposit)
 
-    UPDATE library.books
-    SET is_available = FALSE
-    WHERE book_id IN (SELECT book_id FROM tmp);
+    SELECT COALESCE(SUM(up_cte.deposit), 0) AS deposit
+    FROM up_cte
+    INTO _deposit;
 
     WITH cte AS (
         INSERT INTO library.issueds AS ec (issued_id, user_id, return_date, is_returned, deposit, ch_staff_id, ch_dt)
