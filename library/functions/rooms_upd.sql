@@ -7,10 +7,11 @@ DECLARE
     _room_id INT;
     _name    VARCHAR(64);
 BEGIN
-    SELECT coalesce(room_id, nextval('library.rooms_room_id_seq')) AS room_id, name
+    SELECT coalesce(r.room_id, nextval('library.rooms_room_id_seq')) AS room_id, s.name
     INTO _room_id, _name
     FROM jsonb_to_record(_src) AS s (room_id SMALLINT,
-                                     name VARCHAR(64));
+                                     name VARCHAR(64))
+             LEFT JOIN library.rooms r ON r.room_id = s.room_id;
 
     INSERT INTO library.rooms AS a (room_id, name)
     SELECT _room_id, _name

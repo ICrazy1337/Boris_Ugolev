@@ -14,13 +14,13 @@ DECLARE
     _deposit      NUMERIC(15, 2);
 BEGIN
     SELECT coalesce(b.book_id, nextval('library.books_sq')) AS book_id,
-           b.name,
-           b.author,
-           b.genre_id,
-           b.description,
-           b.cell_id,
-           b.is_available,
-           b.deposit
+           s.name,
+           s.author,
+           s.genre_id,
+           s.description,
+           s.cell_id,
+           s.is_available,
+           s.deposit
     INTO _book_id, _name, _author, _genre_id, _description, _cell_id, _is_available, _deposit
     FROM jsonb_to_record(_src) AS s (book_id INT,
                                      name VARCHAR(128),

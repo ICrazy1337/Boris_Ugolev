@@ -8,9 +8,10 @@ DECLARE
     _shelf_id INT;
     _genre_id INT;
 BEGIN
-    SELECT coalesce(place_id, nextval('library.places_place_id_seq')) AS place_id, shelf_id, genre_id
+    SELECT coalesce(p.place_id, nextval('library.places_place_id_seq')) AS place_id, s.shelf_id, s.genre_id
     INTO _place_id, _shelf_id, _genre_id
-    FROM jsonb_to_record(_src) AS s (place_id INT, shelf_id INT, genre_id VARCHAR(320));
+    FROM jsonb_to_record(_src) AS s (place_id INT, shelf_id INT, genre_id VARCHAR(320))
+             LEFT JOIN library.places p ON p.place_id = s.place_id;
 
     IF NOT EXISTS (SELECT 1 FROM dictionary.genres p WHERE p.genre_id = _genre_id) THEN
         RETURN public.errmessage(_errcode := 'library.places_upd.genre_id',

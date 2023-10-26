@@ -12,10 +12,10 @@ DECLARE
     _dt           TIMESTAMPTZ := now() AT TIME ZONE 'Europe/Moscow';
 BEGIN
     SELECT COALESCE(ur.user_id, nextval('humanresource.users_sq')) AS user_id,
-           ur.name,
-           ur.surname,
-           ur.phone_number,
-           ur.birth_day
+           s.name,
+           s.surname,
+           s.phone_number,
+           s.birth_day
     INTO _user_id, _name, _surname, _phone_number, _birth_day
     FROM jsonb_to_record(_src) AS s (user_id int,
                                      name varchar(64),
