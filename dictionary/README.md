@@ -46,7 +46,7 @@ VALUES (1, 'Фантастика'),
 
 ### Функция `dictionary.genres_get()`
 
-#### Функция genres_get() выводит список всех жанров
+#### Функция dictionary.genres_get() выводит список всех жанров
 
 #### Пример вызова
 
@@ -102,7 +102,7 @@ SELECT dictionary.genres_get();
 
 ### Функция `dictionary.penaltiestypes_upd(_src jsonb)`
 
-#### Функция penaltiestypes_upd() служит для добавления новых типов штрафов
+#### Функция dictionary.penaltiestypes_upd() служит для добавления новых типов штрафов
 
 - _src - json содержащий данные о типе штафа
 
@@ -126,7 +126,7 @@ SELECT dictionary.penaltiestypes_upd('{
 
 ### Функция `dictionary.penaltiestypes_get()`
 
-#### Функция penaltiestypes_get() выводит список всех типов штрафов
+#### Функция dictionary.penaltiestypes_get() выводит список всех типов штрафов
 
 #### Пример вызова
 
@@ -165,7 +165,7 @@ SELECT dictionary.penaltiestypes_get();
 
 ### Функция `dictionary.posts_upd(_src jsonb)`
 
-#### Функция posts_upd() служит для добавления новых типов должностей
+#### Функция dictionary.posts_upd() служит для добавления новых типов должностей
 
 - _src - json содержащий данные о должности
 
@@ -189,7 +189,7 @@ SELECT dictionary.posts_upd('{
 
 ### Функция `dictionary.posts_get()`
 
-#### Функция posts_get() выводит список всех должностей
+#### Функция dictionary.posts_get() выводит список всех должностей
 
 #### Пример вызова
 
@@ -234,7 +234,7 @@ SELECT dictionary.posts_get();
 
 ### Функция `dictionary.subscriptionstypes_upd(_src jsonb)`
 
-#### Функция subsriptionstypes_upd() служит для добавления новых типов подписок
+#### Функция dictionary.subsriptionstypes_upd() служит для добавления новых типов подписок
 
 - _src - json содержащий данные о типе подписки
 
@@ -259,7 +259,7 @@ SELECT dictionary.subscriptionstypes_upd('{
 
 ### Функция `dictionary.subscriptionstypes_get()`
 
-#### Функция subsriptionstypes_get() выводит список всех должностей
+#### Функция dictionary.subsriptionstypes_get() выводит список всех должностей
 
 #### Пример вызова
 

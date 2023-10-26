@@ -23,7 +23,7 @@
 SELECT history.create_partition('subscriberschanges')
 ```
 
-## Функция `dictionary.drop_partitions(_table_name TEXT)`
+## Функция `history.drop_partitions(_table_name TEXT)`
 
 ### Функция drop_partitions() удаляет партиции и секции в таблице назначения
 

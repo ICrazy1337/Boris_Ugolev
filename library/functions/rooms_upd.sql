@@ -11,7 +11,7 @@ BEGIN
     INTO _room_id, _name
     FROM jsonb_to_record(_src) AS s (room_id SMALLINT,
                                      name VARCHAR(64))
-             LEFT JOIN rooms r ON r.room_id = s.room_id;
+             LEFT JOIN library.rooms r ON r.room_id = s.room_id;
 
     INSERT INTO library.rooms AS a (room_id, name)
     SELECT _room_id, _name

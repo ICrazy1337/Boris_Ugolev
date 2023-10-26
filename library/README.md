@@ -43,9 +43,9 @@
     </tr>
 </table>
 
-### Функция `humanresource.books_upd(_src JSONB)`
+### Функция `library.books_upd(_src JSONB)`
 
-#### Функция humanresource.bookd_upd() добавляет или изменяет данные о сотруднике
+#### Функция library.bookd_upd() добавляет или изменяет данные о сотруднике
 
 - _src - json содержащий данные о книге
 
@@ -71,9 +71,9 @@ SELECT library.books_upd('{
 }
 ```
 
-### Функция `humanresource.books_get(_name VARCHAR(128))`
+### Функция `library.books_get(_name VARCHAR(128))`
 
-#### Функция humanresource.staff_upd() вывод данные о книгах с определенным названием
+#### Функция library.book_get() вывод данные о книгах с определенным названием
 
 - _name- название книги
 
@@ -119,39 +119,9 @@ SELECT library.books_get('Какая-то книга');
 }
 ```
 
-### Функция `humanresource.staff_get(_phone_number VARCHAR(11))`
-
-#### Функция humanresource.staff_get выводит сотрудника по номеру телефона
-
-- _phone_number - номер телефона сотрудника
-
-#### Пример вызова
-
-```sql
-SELECT humanresource.staff_get('+7999999999');
-```
-
-#### Вывод
-
-```json
-{
-  "data": [
-    {
-      "name": "Boris",
-      "ch_dt": "2023-10-23T15:06:43.149957+00:00",
-      "post_id": 1,
-      "surname": "Ugolev",
-      "staff_id": 2,
-      "ch_staff_id": 2542,
-      "phone_number": "+7999999999"
-    }
-  ]
-}
-```
-
 ---
 
-## TABLE `users`
+## TABLE `issueds`
 
 <table>
     <tr>
@@ -159,24 +129,24 @@ SELECT humanresource.staff_get('+7999999999');
         <th>Описание</th>
     </tr>
     <tr>
-        <td>user_id INT NOT NULL</td>
+        <td>issued_id   BIGINT         NOT NULLL</td>
+        <td>Идентификатор выдачи</td>
+    </tr>
+    <tr>
+        <td>user_id     INT            NOT NULL</td>
         <td>Идентификатор пользователя</td>
     </tr>
     <tr>
-        <td>name VARCHAR(64) NOT NULL</td>
-        <td>Имя пользователя</td>
+        <td>    return_date DATE           NOT NULL</td>
+        <td>Дата возврата</td>
     </tr>
     <tr>
-        <td>surname VARCHAR(64) NOT NULL</td>
-        <td>Фамилия пользователя</td>
+        <td>is_returned BOOLEAN NOT NULL</td>
+        <td>Возвращена или нет</td>
     </tr>
     <tr>
-        <td>phone_number VARCHAR(11) NOT NULL</td>
-        <td>Номер телефона</td>
-    </tr>
-    <tr>
-        <td>birth_day DATE NOT NULL</td>
-        <td>Дата рождения</td>
+        <td>  deposit     NUMERIC(15, 2) NOT NULL</td>
+        <td>Депозит выдачи</td>
     </tr>
     <tr>
         <td>ch_staff_id INT NOT NULL</td>
@@ -188,21 +158,29 @@ SELECT humanresource.staff_get('+7999999999');
     </tr>
 </table>
 
-### Функция `humanresource.users_upd(_src JSONB, _ch_staff_id INT)`
+### Функция `library.issueds_upd(_src JSONB, _ch_staff_id INT)`
 
-#### Функция humanresource.users_upd добавляет или изменяет данные о пользователе
+#### Функция library.issueds_upd() добавляет или изменяет данные о выдаче
 
-- _src - json содержащий данные о сотруднике
-- _ch_staff_id - идентификатор сотрудника
+- _src - JSON с данными о выдаче
+- _ch_staff_id - идентификатор сотрудника, произвевшего выдачу
 
 #### Пример вызова
 
 ```sql
-SELECT humanresource.users_upd('{
-  "name": "Boris",
-  "surname": "Ugolev",
-  "phone_number": "+7926999999",
-  "birth_day": "2004-01-02"}', 2542);
+SELECT library.issueds_upd('{
+  "books": [
+    {
+      "book_id": 9
+    },
+    {
+      "book_id": 15
+    }
+  ],
+  "user_id": 2,
+  "return_date": "23-10-2023",
+  "is_returned": false
+}', 1111);
 ```
 
 #### Вывод
@@ -213,16 +191,14 @@ SELECT humanresource.users_upd('{
 }
 ```
 
-### Функция `humanresource.users_get(_phone_number VARCHAR(11))`
+### Функция `library.issueds_get(_user_id INT)`
 
-#### Функция humanresource.users_get выводит пользователя по номеру телефона
-
-- _phone_number - номер телефона пользователя
+#### Функция library.issueds_get() добавляет или изменяет данные о пользователе
 
 #### Пример вызова
 
 ```sql
-SELECT humanresource.users_get('+7999999999');
+SELECT library.issueds_get(2);
 ```
 
 #### Вывод
@@ -231,13 +207,17 @@ SELECT humanresource.users_get('+7999999999');
 {
   "data": [
     {
-      "name": "Boris",
-      "ch_dt": "2023-10-23T22:00:21.015484+00:00",
-      "surname": "Ugolev",
+      "ch_dt": "2023-10-26T00:05:27.597767+00:00",
+      "book_id": [
+        9,
+        12
+      ],
+      "deposit": 0.00,
       "user_id": 2,
-      "birth_day": "2004-01-25",
-      "ch_staff_id": 2542,
-      "phone_number": "+7999999999"
+      "issued_id": 98,
+      "ch_staff_id": 1111,
+      "is_returned": false,
+      "return_date": "2023-10-23"
     }
   ]
 }
@@ -245,7 +225,7 @@ SELECT humanresource.users_get('+7999999999');
 
 ---
 
-## TABLE `subscribers`
+## TABLE `penalties`
 
 <table>
     <tr>
@@ -253,37 +233,41 @@ SELECT humanresource.users_get('+7999999999');
         <th>Описание</th>
     </tr>
     <tr>
-        <td>user_id INT NOT NULL</td>
-        <td>Идентификатор пользователя имееющего подписку</td>
+        <td>penalty_id  BIGSERIAL   NOT NULL</td>
+        <td>Идентификатор штрафа</td>
     </tr>
     <tr>
-        <td>staff_id INT NOT NULL</td>
-        <td>Идентификатор сотрудника выдавшего подписку</td>
+        <td>type_id     INT         NOT NULL</td>
+        <td>Идентификатор типа штрафа</td>
     </tr>
     <tr>
-        <td>type_id INT NOT NULL</td>
-        <td>Идентификатор типа подписки</td>
+        <td>issued_id   INT         NOT NULL</td>
+        <td>Идентификатор оштрафованой выдачи</td>
     </tr>
     <tr>
-        <td>end_dt TIMESTAMPTZ NOT NULL</td>
-        <td>Дата и время конца подписки</td>
+        <td>ch_staff_id INT NOT NULL</td>
+        <td>Идентификатор сотрудника, который создал или изменил данные</td>
+    </tr>
+    <tr>
+        <td>ch_dt TIMESTAMPTZ NOT NULL</td>
+        <td>Дата и время изменения</td>
     </tr>
 </table>
 
-### Функция `humanresource.subscribers_upd(_src JSONB, _staff_id INT)`
+### Функция `library.penalties_upd(_src JSONB, _ch_staff_id INT)`
 
-#### Функция humanresource.subscribers_upd() добавляет или изменяет данные о подписчике
+#### Функция library.penalties_upd() добавляет или изменяет данные о штрафе
 
-- _src - json содержащий данные о подписке
-- _staff_id идентификатор сотрудника
+- _src - JSON, содержащий данные о штрафах выдач
+- _ch_staff_id - идентификатор сотрудника добавившего или изменившегося штраф
 
 #### Пример вызова
 
 ```sql
-select humanresource.subscribers_upd('{
-  "user_id": 2,
-  "type_id": 5
-}', 2542);
+SELECT library.penalties_upd('{
+  "type_id": 1,
+  "issued_id": 98
+}', 2542)
 ```
 
 #### Вывод
@@ -294,16 +278,16 @@ select humanresource.subscribers_upd('{
 }
 ```
 
-### Функция `humanresource.subscribers_get(_type INT)`
+### Функция `library.penalties_get(_issued_id INT)`
 
-#### Функция humanresource.users_get() выводит всех пользователей с определенным типом подписки
+#### Функция library.penalties_get() выводит штрафы по выдачи
 
-- _type_id - идентификатор типа подписки
+- _issued_id - идентификатор выдачи
 
 #### Пример вызова
 
 ```sql
-SELECT humanresource.subscribers_get(1);
+SELECT library.penalties_get(98);
 ```
 
 #### Вывод
@@ -312,10 +296,213 @@ SELECT humanresource.subscribers_get(1);
 {
   "data": [
     {
-      "end_dt": "2028-01-23T22:18:34.057085+00:00",
-      "type_id": 5,
-      "user_id": 2,
-      "staff_id": 2542
+      "ch_dt": "2023-10-26T11:40:33.25371+00:00",
+      "type_id": 1,
+      "issued_id": 98,
+      "penalty_id": 20,
+      "ch_staff_id": 2542
+    }
+  ]
+}
+```
+
+### Функция `library.penalize(_type_id INT, _ch_staff_id INT)`
+
+#### Функция library.penalize() - штрафует всех пользователей у которых просроченна дата возврата
+
+- _type_id - идентификатор типа штрафа
+- _ch_staff_id - идентификатор сотрудника выписавшего штраф
+
+#### Пример вызова
+
+```sql
+CALL library.penalize(1, 2542);
+```
+
+---
+
+## Система хранения
+
+## TABLE `rooms`
+
+<table>
+    <tr>
+        <th>Атрибут</th>
+        <th>Описание</th>
+    </tr>
+    <tr>
+        <td>room_id SMALLSERIAL NOT NULL</td>
+        <td>Идентификатор комнаты</td>
+    </tr>
+    <tr>
+        <td>name VARCHAR(64) NOT NULL</td>
+        <td>Название комнаты</td>
+    </tr>
+</table>
+
+## TABLE `shelves`
+
+<table>
+    <tr>
+        <th>Атрибут</th>
+        <th>Описание</th>
+    </tr>
+    <tr>
+        <td>shelf_id SMALLSERIAL NOT NULL</td>
+        <td>Идентификатор шкафа</td>
+    </tr>
+    <tr>
+        <td>room_id  SMALLINT    NOT NULL</td>
+        <td>Идентификатор комнаты</td>
+    </tr>
+</table>
+
+## TABLE `places`
+
+<table>
+    <tr>
+        <th>Атрибут</th>
+        <th>Описание</th>
+    </tr>
+    <tr>
+        <td>place_id SMALLSERIAL NOT NULL</td>
+        <td>Идентификатор полки</td>
+    </tr>
+    <tr>
+        <td>shelf_id  SMALLINT    NOT NULL</td>
+        <td>Идентификатор шкафа</td>
+    </tr>
+    <tr>
+        <td>genre_id INT NOT NULL</td>
+        <td>Идентификатор жанра</td>
+    </tr>
+</table>
+
+## TABLE `cells`
+
+<table>
+    <tr>
+        <th>Атрибут</th>
+        <th>Описание</th>
+    </tr>
+    <tr>
+        <td>cell_id SMALLSERIAL NOT NULL</td>
+        <td>Идентификатор полки</td>
+    </tr>
+    <tr>
+        <td>place_id  SMALLINT    NOT NULL</td>
+        <td>Идентификатор полки</td>
+    </tr>
+</table>
+
+### Функция `library.rooms_upd(_src JSONB)`
+
+#### Функция library.rooms_upd() добавляет или изменяет данные о комнате
+
+- _src - json содержащий данные о комнате
+
+#### Пример вызова
+
+```sql
+SELECT library.rooms_upd('{"name": "Читательская"}');
+```
+
+#### Вывод
+
+```json
+{
+  "name": "Читательская",
+  "room_id": 2
+}
+```
+
+### Функция `library.shelves_upd(_src JSONB)`
+
+#### Функция library.shelves_upd() добавляет или изменяет данные о шкафе
+
+- _src - json содержащий данные о шкафе
+
+#### Пример вызова
+
+```sql
+SELECT library.shelves_upd('{"room_id": 1}');
+```
+
+#### Вывод
+
+```json
+{
+  "room_id": 1,
+  "shelf_id": 2
+}
+```
+
+### Функция `library.places_upd(_src JSONB)`
+
+#### Функция library.places_upd() добавляет или изменяет данные о полке
+
+- _src - json содержащий данные о полке
+
+#### Пример вызова
+
+```sql
+SELECT library.places_upd('{"shelf_id": 1, "genre_id":  1}');
+```
+
+#### Вывод
+
+```json
+{
+  "genre_id": 1,
+  "place_id": 2,
+  "shelf_id": 1
+}
+```
+
+### Функция `library.cells_upd(_src JSONB)`
+
+#### Функция library.cells_upd() добавляет или изменяет данные о ячейке
+
+- _src - json содержащий данные о ячейке
+
+#### Пример вызова
+
+```sql
+SELECT library.cells_upd('{"place_id": 1}');
+```
+
+#### Вывод
+
+```json
+{
+  "cell_id": 6,
+  "place_id": 1
+}
+```
+
+### Функция `library.placeofstorage_get(_book_id INT)`
+
+#### Функция library.placeofstorage_get() выводит место хранения книги
+
+- _book_id - идентификатор книги
+
+#### Пример вызова
+
+```sql
+SELECT library.placeofstorage_get(15);
+```
+
+#### Вывод
+
+```json
+{
+  "data": [
+    {
+      "book_id": 15,
+      "cell_id": 5,
+      "room_id": 1,
+      "place_id": 1,
+      "shelf_id": 1
     }
   ]
 }
