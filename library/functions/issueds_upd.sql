@@ -30,13 +30,14 @@ BEGIN
     IF EXISTS (SELECT 1
                FROM jsonb_to_recordset(_books) AS data (book_id INT)
                         LEFT JOIN library.books b ON data.book_id = b.book_id
-               WHERE b.book_id IS NULL) THEN
+               WHERE b.book_id IS NULL
+                  OR EXISTS (SELECT i.issued_id, i.book_id FROM library.issuedsbooks i)
+                  OR b.is_available = FALSE) THEN
         RETURN public.errmessage(_errcode := 'library.issueds_upd.not_possible',
                                  _msg := 'Выдача данных книг невозможна',
                                  _detail := concat('book_id = ', (SELECT array_agg(data.book_id)
                                                                   FROM jsonb_to_recordset(_books) AS data (book_id INT)
-                                                                           LEFT JOIN library.books b ON data.book_id = b.book_id
-                                                                  WHERE b.book_id IS NULL)));
+                                                                           LEFT JOIN library.books b ON data.book_id = b.book_id)));
     END IF;
 
     WITH cte AS
@@ -47,9 +48,13 @@ BEGIN
              SET is_available = FALSE
              WHERE book_id IN (SELECT book_id FROM cte) returning deposit)
 
-    SELECT COALESCE(SUM(up_cte.deposit), 0) AS deposit
+    SELECT coalesce(sum(up_cte.deposit), 0) AS deposit
     FROM up_cte
     INTO _deposit;
+
+    IF (SELECT 1 FROM humanresource.subscribers s WHERE s.user_id = _user_id AND s.end_dt > _ch_dt) THEN
+        _deposit := 0;
+    END IF;
 
     WITH cte AS (
         INSERT INTO library.issueds AS ec (issued_id, user_id, return_date, is_returned, deposit, ch_staff_id, ch_dt)

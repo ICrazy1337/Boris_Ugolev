@@ -7,7 +7,7 @@ DECLARE
     _cell_id  INT;
     _place_id INT;
 BEGIN
-    SELECT coalesce(c.cell_id, nextval('library.cells_cell_id_seq')) AS cell_id, c.place_id
+    SELECT coalesce(c.cell_id, nextval('library.cells_cell_id_seq')) AS cell_id, s.place_id
     INTO _cell_id, _place_id
     FROM jsonb_to_record(_src) AS s (cell_id INT,
                                      place_id INT)
