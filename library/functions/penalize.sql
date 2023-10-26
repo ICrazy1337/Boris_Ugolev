@@ -13,6 +13,6 @@ BEGIN
            _ch_dt
     FROM library.issueds i
     WHERE i.return_date < _ch_dt::DATE
-      AND NOT EXISTS(SELECT penalty_id FROM library.penalties) AND i.is_returned = FALSE;
+      AND NOT EXISTS(SELECT 1 FROM library.penalties p WHERE p.issued_id = i.issued_id) AND i.is_returned = FALSE;
 END
 $$;
