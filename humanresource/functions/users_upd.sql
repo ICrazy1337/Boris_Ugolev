@@ -12,10 +12,10 @@ DECLARE
     _dt           TIMESTAMPTZ := now() AT TIME ZONE 'Europe/Moscow';
 BEGIN
     SELECT COALESCE(ur.user_id, nextval('humanresource.users_sq')) AS user_id,
-           s.name,
-           s.surname,
-           s.phone_number,
-           s.birth_day
+           ur.name,
+           ur.surname,
+           ur.phone_number,
+           ur.birth_day
     INTO _user_id, _name, _surname, _phone_number, _birth_day
     FROM jsonb_to_record(_src) AS s (user_id int,
                                      name varchar(64),
@@ -48,13 +48,14 @@ BEGIN
                     ch_dt = excluded.ch_dt
             RETURNING ec.*)
 
-    INSERT INTO history.userschanges   (user_id,
-                                        name,
-                                        surname,
-                                        phone_number,
-                                        birth_day,
-                                        ch_staff_id,
-                                        ch_dt)
+    INSERT
+    INTO history.userschanges (user_id,
+                               name,
+                               surname,
+                               phone_number,
+                               birth_day,
+                               ch_staff_id,
+                               ch_dt)
     SELECT ic.user_id,
            ic.name,
            ic.surname,

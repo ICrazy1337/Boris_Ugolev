@@ -4,8 +4,8 @@ CREATE OR REPLACE FUNCTION library.shelves_upd(_src JSONB) RETURNS JSONB
 AS
 $$
 DECLARE
-    _shelf_id      INT;
-    _room_id     INT;
+    _shelf_id INT;
+    _room_id  INT;
 BEGIN
     SELECT coalesce(shelf_id, nextval('library.shelves_shelf_id_seq')) AS shelf_id, room_id
     INTO _shelf_id, _room_id
