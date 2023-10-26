@@ -10,7 +10,8 @@ BEGIN
     SELECT coalesce(shelf_id, nextval('library.shelves_shelf_id_seq')) AS shelf_id, room_id
     INTO _shelf_id, _room_id
     FROM jsonb_to_record(_src) AS s (shelf_id INT,
-                                     room_id INT);
+                                     room_id INT)
+             LEFT JOIN shelves sh ON sh.shelf_id = s.shelf_id;
 
     IF NOT EXISTS (SELECT 1 FROM library.rooms r WHERE r.room_id = _room_id) THEN
         RETURN public.errmessage(_errcode := 'library.shelves_upd.room_id',
